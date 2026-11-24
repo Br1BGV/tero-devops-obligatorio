@@ -9,18 +9,29 @@ Tero es una tienda en línea basada en microservicios. Permite explorar un catá
 - [Docker](https://docs.docker.com/get-docker/) 24+
 - [Docker Compose](https://docs.docker.com/compose/install/) v2.20+
 
+
+
 ## Inicio rápido
 
+Antes del primer arranque hay que crear el archivo de variables de entorno a partir de la
+plantilla y completar los valores. El `.env` no se versiona: cada integrante usa el suyo.
+
 ```bash
+cp .env.example .env
+# completar POSTGRES_PASSWORD, ADMIN_USERNAME, ADMIN_PASSWORD y ADMIN_JWT_SECRET
 docker compose up --build
 ```
 
-| Servicio | URL                   |
-|----------|-----------------------|
-| Tienda   | http://localhost:8080 |
-| Admin    | http://localhost:8081 |
+Si falta alguna variable obligatoria, `docker compose` aborta indicando cuál.
 
-Credenciales del admin por defecto: `admin` / `admin`
+
+| Servicio | URL                                            |
+| -------- | ---------------------------------------------- |
+| Tienda   | [http://localhost:8080](http://localhost:8080) |
+| Admin    | [http://localhost:8081](http://localhost:8081) |
+
+
+Las credenciales del panel de administración son las que cada quien haya definido en su `.env`.
 
 ## Comandos útiles
 
@@ -39,6 +50,8 @@ docker compose logs -f <servicio>
 ```
 
 ---
+
+
 
 ## Arquitectura de microservicios
 
@@ -79,81 +92,117 @@ docker compose logs -f <servicio>
           └──────────────────────────────────────────────────┘
 ```
 
+
+
 ### Flujo de comunicación
 
-| Origen     | Destino    | Protocolo | Descripción                              |
-|------------|------------|-----------|------------------------------------------|
-| UI         | Catalog    | HTTP REST | Listar y consultar productos             |
-| UI         | Cart       | HTTP REST | Agregar, quitar y consultar carrito      |
-| UI         | Checkout   | HTTP REST | Iniciar y confirmar el proceso de pago   |
-| UI         | Orders     | HTTP REST | Consultar historial de órdenes           |
-| Checkout   | Orders     | HTTP REST | Crear orden al confirmar checkout        |
-| Checkout   | Redis      | TCP       | Persistencia de sesión de checkout       |
-| Catalog    | PostgreSQL | TCP       | Base de datos `catalogdb`                |
-| Cart       | PostgreSQL | TCP       | Base de datos `cartdb`                   |
-| Orders     | PostgreSQL | TCP       | Base de datos `orders`                   |
-| Admin      | PostgreSQL | TCP       | Acceso directo a todas las bases         |
+
+| Origen   | Destino    | Protocolo | Descripción                            |
+| -------- | ---------- | --------- | -------------------------------------- |
+| UI       | Catalog    | HTTP REST | Listar y consultar productos           |
+| UI       | Cart       | HTTP REST | Agregar, quitar y consultar carrito    |
+| UI       | Checkout   | HTTP REST | Iniciar y confirmar el proceso de pago |
+| UI       | Orders     | HTTP REST | Consultar historial de órdenes         |
+| Checkout | Orders     | HTTP REST | Crear orden al confirmar checkout      |
+| Checkout | Redis      | TCP       | Persistencia de sesión de checkout     |
+| Catalog  | PostgreSQL | TCP       | Base de datos `catalogdb`              |
+| Cart     | PostgreSQL | TCP       | Base de datos `cartdb`                 |
+| Orders   | PostgreSQL | TCP       | Base de datos `orders`                 |
+| Admin    | PostgreSQL | TCP       | Acceso directo a todas las bases       |
+
 
 ---
+
+
 
 ## Tecnologías por servicio
 
-| Servicio     | Lenguaje       | Framework        | Runtime         | Persistencia      | Puerto externo |
-|--------------|----------------|------------------|-----------------|-------------------|----------------|
-| **ui**       | TypeScript     | Express          | Node.js 22      | —                 | 8080           |
-| **catalog**  | Go 1.24        | Gin + GORM       | Alpine Linux    | PostgreSQL        | —              |
-| **cart**     | Python 3.12    | FastAPI          | Python slim     | PostgreSQL        | —              |
-| **checkout** | TypeScript     | NestJS           | Node.js 22      | Redis             | —              |
-| **orders**   | Go 1.24        | Gin + GORM       | Alpine Linux    | PostgreSQL        | —              |
-| **admin**    | TypeScript     | Express          | Node.js 22      | PostgreSQL        | 8081           |
-| **db**       | —              | PostgreSQL 16    | —               | —                 | —              |
-| **redis**    | —              | Redis 7          | Alpine Linux    | —                 | —              |
+
+| Servicio     | Lenguaje    | Framework     | Runtime      | Persistencia | Puerto externo |
+| ------------ | ----------- | ------------- | ------------ | ------------ | -------------- |
+| **ui**       | TypeScript  | Express       | Node.js 22   | —            | 8080           |
+| **catalog**  | Go 1.24     | Gin + GORM    | Alpine Linux | PostgreSQL   | —              |
+| **cart**     | Python 3.12 | FastAPI       | Python slim  | PostgreSQL   | —              |
+| **checkout** | TypeScript  | NestJS        | Node.js 22   | Redis        | —              |
+| **orders**   | Go 1.24     | Gin + GORM    | Alpine Linux | PostgreSQL   | —              |
+| **admin**    | TypeScript  | Express       | Node.js 22   | PostgreSQL   | 8081           |
+| **db**       | —           | PostgreSQL 16 | —            | —            | —              |
+| **redis**    | —           | Redis 7       | Alpine Linux | —            | —              |
+
+
+
 
 ### Dependencias clave
 
-| Servicio     | Dependencias destacadas                                               |
-|--------------|-----------------------------------------------------------------------|
-| **catalog**  | `gin-gonic/gin`, `gorm`, `go-gorm/postgres`, OpenTelemetry           |
-| **cart**     | `FastAPI`, `Uvicorn`, `Pydantic`, `psycopg2`, Prometheus client       |
-| **checkout** | `NestJS`, `ioredis`, `class-validator`, OpenTelemetry                 |
-| **orders**   | `gin-gonic/gin`, `gorm`, `go-gorm/postgres`, Prometheus              |
-| **ui**       | `express`, `http-proxy-middleware`                                    |
-| **admin**    | `express`, `pg`, `jsonwebtoken`, `cookie-parser`                      |
+
+| Servicio     | Dependencias destacadas                                         |
+| ------------ | --------------------------------------------------------------- |
+| **catalog**  | `gin-gonic/gin`, `gorm`, `go-gorm/postgres`, OpenTelemetry      |
+| **cart**     | `FastAPI`, `Uvicorn`, `Pydantic`, `psycopg2`, Prometheus client |
+| **checkout** | `NestJS`, `ioredis`, `class-validator`, OpenTelemetry           |
+| **orders**   | `gin-gonic/gin`, `gorm`, `go-gorm/postgres`, Prometheus         |
+| **ui**       | `express`, `http-proxy-middleware`                              |
+| **admin**    | `express`, `pg`, `jsonwebtoken`, `cookie-parser`                |
+
 
 ---
+
+
 
 ## Variables de entorno
 
+
+
 ### UI
-| Variable                        | Descripción                  | Default               |
-|---------------------------------|------------------------------|-----------------------|
-| `RETAIL_UI_ENDPOINTS_CATALOG`   | URL del servicio catalog     | `http://catalog:8080` |
-| `RETAIL_UI_ENDPOINTS_CARTS`     | URL del servicio cart        | `http://carts:8080`   |
-| `RETAIL_UI_ENDPOINTS_CHECKOUT`  | URL del servicio checkout    | `http://checkout:8080`|
-| `RETAIL_UI_ENDPOINTS_ORDERS`    | URL del servicio orders      | `http://orders:8080`  |
+
+
+| Variable                       | Descripción               | Default                |
+| ------------------------------ | ------------------------- | ---------------------- |
+| `RETAIL_UI_ENDPOINTS_CATALOG`  | URL del servicio catalog  | `http://catalog:8080`  |
+| `RETAIL_UI_ENDPOINTS_CARTS`    | URL del servicio cart     | `http://carts:8080`    |
+| `RETAIL_UI_ENDPOINTS_CHECKOUT` | URL del servicio checkout | `http://checkout:8080` |
+| `RETAIL_UI_ENDPOINTS_ORDERS`   | URL del servicio orders   | `http://orders:8080`   |
+
+
+
 
 ### Catalog / Orders / Cart
-| Variable                               | Descripción           | Default          |
-|----------------------------------------|-----------------------|------------------|
-| `RETAIL_CATALOG_PERSISTENCE_PROVIDER`  | Tipo de persistencia  | `postgres`       |
-| `RETAIL_CATALOG_PERSISTENCE_ENDPOINT`  | Host:Puerto de la DB  | `db:5432`        |
-| `DB_PASSWORD`                          | Contraseña PostgreSQL | `retailpassword` |
+
+
+| Variable                              | Descripción           | Default                  |
+| ------------------------------------- | --------------------- | ------------------------ |
+| `RETAIL_CATALOG_PERSISTENCE_PROVIDER` | Tipo de persistencia  | `postgres`               |
+| `RETAIL_CATALOG_PERSISTENCE_ENDPOINT` | Host:Puerto de la DB  | `db:5432`                |
+| `POSTGRES_PASSWORD`                   | Contraseña PostgreSQL | sin default: obligatoria |
+
+
+
 
 ### Checkout
-| Variable                                   | Descripción              | Default               |
-|--------------------------------------------|--------------------------|------------------------|
-| `RETAIL_CHECKOUT_PERSISTENCE_PROVIDER`     | Tipo de persistencia     | `redis`               |
-| `RETAIL_CHECKOUT_PERSISTENCE_REDIS_URL`    | URL de Redis             | `redis://redis:6379`  |
-| `RETAIL_CHECKOUT_ENDPOINTS_ORDERS`         | URL del servicio orders  | `http://orders:8080`  |
+
+
+| Variable                                | Descripción             | Default              |
+| --------------------------------------- | ----------------------- | -------------------- |
+| `RETAIL_CHECKOUT_PERSISTENCE_PROVIDER`  | Tipo de persistencia    | `redis`              |
+| `RETAIL_CHECKOUT_PERSISTENCE_REDIS_URL` | URL de Redis            | `redis://redis:6379` |
+| `RETAIL_CHECKOUT_ENDPOINTS_ORDERS`      | URL del servicio orders | `http://orders:8080` |
+
+
+
 
 ### Admin
-| Variable            | Descripción                | Default                   |
-|---------------------|----------------------------|---------------------------|
-| `ADMIN_USERNAME`    | Usuario administrador      | `admin`                   |
-| `ADMIN_PASSWORD`    | Contraseña administrador   | `admin`                   |
-| `ADMIN_JWT_SECRET`  | Secreto para tokens JWT    | `change-me-in-production` |
+
+
+| Variable           | Descripción              | Default                  |
+| ------------------ | ------------------------ | ------------------------ |
+| `ADMIN_USERNAME`   | Usuario administrador    | sin default: obligatoria |
+| `ADMIN_PASSWORD`   | Contraseña administrador | sin default: obligatoria |
+| `ADMIN_JWT_SECRET` | Secreto para tokens JWT  | sin default: obligatoria |
+
 
 ---
+
+
 
 ## Estructura del repositorio
 
@@ -169,3 +218,4 @@ app/
     ├── ui/             # TypeScript/Express - Frontend
     └── admin/          # TypeScript/Express - Panel de administración
 ```
+
