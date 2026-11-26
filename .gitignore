@@ -11,6 +11,7 @@
 *.tfstate.*
 *.tfvars
 !*.tfvars.example
+!infra/envs/*.tfvars
 crash.log
 
 # Dependencias y artefactos de build

@@ -32,7 +32,7 @@ proyecto:
 **Git Flow** separa `develop`, `release/*` y `hotfix/*` además de `main`. Ese modelo resuelve
 el problema de mantener varias versiones en producción simultáneamente y coordinar releases
 con fecha. Tero no tiene ese problema: hay un solo producto, una sola versión viva y un
-equipo de tres personas trabajando en paralelo durante dos semanas. El costo de mantener
+equipo de dos personas trabajando en paralelo durante dos semanas. El costo de mantener
 ramas de release y los merges cruzados entre `develop` y `main` sería ceremonia pura, y
 aumentaría el riesgo de conflictos sin aportar control real.
 

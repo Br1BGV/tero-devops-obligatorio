@@ -28,11 +28,11 @@ Condicionan varias tareas, conviene tenerlas presentes antes de estimar:
 
 | ID | Tarea | Criterio de terminado |
 |---|---|---|
-| SETUP-1 | Inscribir el equipo en Gestión y en la planilla de alumnos | Los 3 integrantes figuran inscriptos |
-| SETUP-2 | Instalar toolchain en las 3 máquinas: Docker Desktop, Go 1.24, Terraform, AWS CLI, GitHub CLI | `docker compose up` levanta Tero localmente en las 3 |
+| SETUP-1 | Inscribir el equipo en Gestión y en la planilla de alumnos | Los 2 integrantes figuran inscriptos |
+| SETUP-2 | Instalar toolchain en las 2 máquinas: Docker Desktop, Go 1.24, Terraform, AWS CLI, GitHub CLI | `docker compose up` levanta Tero localmente en las 2 |
 | SETUP-3 | Crear el tablero Kanban y cargar este backlog | Tablero con todas las tareas en `Backlog` |
 | SETUP-4 | Captura del tablero: estado inicial | Imagen guardada en `docs/evidencias/tablero-inicio.png` |
-| SETUP-5 | Verificar acceso de los 3 al Learner Lab y anotar cómo obtener credenciales | Procedimiento escrito en `docs/` |
+| SETUP-5 | Verificar acceso de los 2 al Learner Lab y anotar cómo obtener credenciales | Procedimiento escrito en `docs/` |
 
 ## Épico 1 — Control de versiones y colaboración
 
@@ -155,4 +155,4 @@ Condicionan varias tareas, conviene tenerlas presentes antes de estimar:
 | DOC-8 | Captura del tablero: estado intermedio | `docs/evidencias/tablero-mitad.png` |
 | DOC-9 | Captura del tablero: estado de cierre | `docs/evidencias/tablero-cierre.png` |
 | DOC-10 | Armar el ZIP de entrega de menos de 40 MB | Subido a Gestión antes del 07/12 a las 21:00 |
-| DOC-11 | Ensayar la defensa: rollback, rotación de credencial y diagnóstico de pipeline | Los 3 integrantes pueden ejecutar cualquiera de las tres |
+| DOC-11 | Ensayar la defensa: rollback, rotación de credencial y diagnóstico de pipeline | Los 2 integrantes pueden ejecutar cualquiera de las tres |

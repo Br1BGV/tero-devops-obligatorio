@@ -24,6 +24,13 @@ docker compose up --build
 
 Si falta alguna variable obligatoria, `docker compose` aborta indicando cuál.
 
+## Seguridad de secretos (DSO / IaC)
+
+- El repositorio mantiene una excepción documentada de Gitleaks para hallazgos históricos del
+  commit inicial: `docs/dso-excepciones.md`.
+- Los archivos `infra/envs/*.tfvars` se versionan para parametrizar ambientes.
+- Los valores sensibles no se guardan en `.tfvars`; se gestionan en AWS SSM Parameter Store.
+
 
 | Servicio | URL                                            |
 | -------- | ---------------------------------------------- |
