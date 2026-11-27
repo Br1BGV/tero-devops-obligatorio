@@ -1,4 +1,4 @@
-}# ADR-002: Estado remoto de Terraform y uso de LabRole
+# ADR-002: Estado remoto de Terraform y uso de LabRole
 
 - **Estado:** Aceptado
 - **Fecha:** 2026-11-27
