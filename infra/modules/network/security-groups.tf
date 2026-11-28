@@ -80,6 +80,9 @@ resource "aws_security_group" "rds" {
     security_groups = [aws_security_group.ecs.id]
   }
 
+  # RDS no necesita iniciar conexiones salientes.
+  egress = []
+
   tags = {
     Name = "${var.name_prefix}-rds-sg"
   }
@@ -100,6 +103,9 @@ resource "aws_security_group" "redis" {
     protocol        = "tcp"
     security_groups = [aws_security_group.ecs.id]
   }
+
+  # Redis no necesita iniciar conexiones salientes.
+  egress = []
 
   tags = {
     Name = "${var.name_prefix}-redis-sg"
