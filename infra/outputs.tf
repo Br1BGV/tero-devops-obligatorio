@@ -17,3 +17,18 @@ output "lab_role_arn" {
   description = "ARN del LabRole que usan ECS y Lambda (el Learner Lab no permite crear roles)."
   value       = data.aws_iam_role.lab.arn
 }
+
+output "vpc_id" {
+  description = "ID de la VPC del ambiente."
+  value       = module.network.vpc_id
+}
+
+output "public_subnet_ids" {
+  description = "Subnets públicas del ambiente (ALB y tareas de ECS)."
+  value       = module.network.public_subnet_ids
+}
+
+output "private_subnet_ids" {
+  description = "Subnets privadas del ambiente (RDS y Redis)."
+  value       = module.network.private_subnet_ids
+}

@@ -46,6 +46,9 @@ terraform apply -var-file=envs/$ENV.tfvars
 | `project` | Prefijo de nombres de recursos | `tero` |
 | `environment` | `dev`, `test` o `prod` (validado) | — (obligatoria) |
 | `aws_region` | Región de AWS | `us-east-1` |
+| `vpc_cidr` | Rango CIDR de la VPC del ambiente | — (obligatoria) |
+| `public_subnets` | Mapa zona => CIDR para subnets públicas | — (obligatoria) |
+| `private_subnets` | Mapa zona => CIDR para subnets privadas | — (obligatoria) |
 
 ## Decisiones
 
