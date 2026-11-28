@@ -19,3 +19,18 @@ variable "aws_region" {
   type        = string
   default     = "us-east-1"
 }
+
+variable "vpc_cidr" {
+  description = "Rango de direcciones de la VPC del ambiente."
+  type        = string
+}
+
+variable "public_subnets" {
+  description = "Subnets públicas del ambiente: zona de disponibilidad => CIDR."
+  type        = map(string)
+}
+
+variable "private_subnets" {
+  description = "Subnets privadas del ambiente: zona de disponibilidad => CIDR."
+  type        = map(string)
+}
